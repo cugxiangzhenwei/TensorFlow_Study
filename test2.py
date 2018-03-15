@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import tensorflow as tf
+import os
 
+os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 
 from numpy.random import RandomState
 
@@ -56,11 +58,10 @@ with tf.Session() as sess:
     for i in range(STEPS):
         #每次选取batch_size个样本进行训练
         start = (i * batch_size) % dataset_size
-        end = min(start + batch_size-1,dataset_size-1)
+        end = min(start + batch_size,dataset_size)
 
-        print("start=%d,end=%d")%(start,end)
         #通过选取的样本训练神经网络并更新参数
-        sess.run(train_step,feed_dict={x:X[start,end],y_:Y[start,end]})
+        sess.run(train_step,feed_dict={x:X[start:end],y_:Y[start:end]})
         if i % 1000 ==0:
             #每隔一段时间计算在所有数据上的交叉熵并输出
             total_cross_entropy = sess.run(cross_entropy,feed_dict={x:X,y_:Y})
