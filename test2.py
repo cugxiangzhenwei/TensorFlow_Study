@@ -6,8 +6,6 @@ os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 
 from numpy.random import RandomState
 
-#定义训练数据的batch的大小
-batch_size = 8
 
 #定义神经网络的参数
 w1 = tf.Variable(tf.random_normal([2,3],stddev=1,seed=1))
@@ -34,7 +32,7 @@ train_step = tf.train.AdamOptimizer(0.001).minimize(cross_entropy)
 
 #通过随机数生成一个模拟数据集
 rdm = RandomState(1)
-dataset_size = 128
+dataset_size = 102400
 X = rdm.rand(dataset_size,2)
 print X
 
@@ -43,6 +41,9 @@ print X
 
 Y = [[int(x1 + x2 <1)] for (x1,x2) in X]
 print Y
+
+#定义训练数据的batch的大小
+batch_size = 1024
 
 #创建一个会话来运行TensorFlow程序。
 with tf.Session() as sess:
@@ -54,7 +55,7 @@ with tf.Session() as sess:
     print sess.run(w2)
 
     #设置训练的轮数
-    STEPS = 5000
+    STEPS = 30000
     for i in range(STEPS):
         #每次选取batch_size个样本进行训练
         start = (i * batch_size) % dataset_size
